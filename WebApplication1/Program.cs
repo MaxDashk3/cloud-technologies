@@ -1,4 +1,4 @@
-namespace Lab_1
+namespace WebApplication1
 {
     public class Program
     {
@@ -8,7 +8,6 @@ namespace Lab_1
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddApplicationInsightsTelemetry();
 
             var app = builder.Build();
 
