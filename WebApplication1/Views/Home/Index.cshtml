@@ -1,0 +1,48 @@
+﻿@using System.Text.RegularExpressions
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Text entity linking analysis</h1>
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("InputText", "Enter Text:")
+        @Html.TextArea("inputText", new Dictionary<string, string> { { "class", "form-control" } })
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+}
+<hr />
+
+@if (ViewBag.Result != null)
+{
+    <div>
+        <h2>Result</h2>
+        <table class="table">
+            <tr>
+                <th><b>Name</b></th>
+                <th><b>Data source</b></th>
+				<th><b>Link</b></th>
+            </tr>
+            @foreach(var item in ViewBag.Result.Value){
+                <tr>
+                    <th>@item.Name</th>
+                    <th>@item.DataSource</th>
+                    <th><a href="@item.Url">Link</a></th>
+                </tr>
+            }
+        </table>
+    </div>
+
+    var text = ViewBag.Text as string;
+
+    foreach (var item in ViewBag.Result.Value)
+    {
+        var pattern = $@"\b{Regex.Escape(item.Name)}\b";
+        text = Regex.Replace(text, pattern, $"<a href='{item.Url}'>{item.Name}</a>", RegexOptions.IgnoreCase);
+    }
+
+    <p>@Html.Raw(text)</p>
+}
