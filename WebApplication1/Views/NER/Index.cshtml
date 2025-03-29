@@ -1,0 +1,62 @@
+﻿@using System.Text.RegularExpressions
+@using Azure.AI.TextAnalytics
+@model FormModel
+@{
+    ViewData["Title"] = "Named Entity Recognition";
+}
+
+<h1>Text Named Entity Recognition</h1>
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("inputText", "Enter Text:")
+        @Html.TextArea("inputText", new Dictionary<string, string> { { "class", "form-control" } })
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+}
+<hr />
+
+@if (Model != null)
+{
+    <div>
+        <h2>Result</h2>
+        <table class="table">
+            <tr>
+                <th><b>Entity</b></th>
+                <th><b>Category</b></th>
+                <th><b>Subcategory</b></th>
+            </tr>
+            @foreach (var item in Model.recognizedEntities)
+            {
+                <tr>
+                    <th>@item.Text</th>
+                    <th>@item.Category</th>
+                    <th>@(item.SubCategory != null ? item.SubCategory : "-")</th>
+                </tr>
+            }
+        </table>
+    </div>
+
+    @using (Html.BeginForm("Result", "NER", FormMethod.Post))
+    {
+        string text = Model.text;
+        int i = 0;
+        foreach (var item in Model.randomEntities)
+        {
+            text = text.Substring(0, item.Offset) + $"<input type = \"text\" name = \"answers[{i}]\"/>" + text.Substring(item.Offset + item.Length);
+            i++;
+        }
+        @Html.Raw(text)
+        @for (int a=0; a<Model.randomEntities.Count; a++)
+        {
+            @Html.HiddenFor(m => m.randomEntities[a].Text);
+            @Html.HiddenFor(m => m.randomEntities[a].Length);
+            @Html.HiddenFor(m => m.randomEntities[a].Offset);
+        }
+
+        @Html.HiddenFor(m => m.text);
+        <input type="submit" value="Submit">
+    }
+}

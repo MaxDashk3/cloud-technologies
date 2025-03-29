@@ -1,0 +1,26 @@
+﻿@using Azure.AI.TextAnalytics
+@model FormModel
+@{
+    int i = 0;
+    string text = Model.text;
+}
+
+<style>
+    .right{
+        color: green
+    }
+    .wrong{
+        text-decoration: line-through;
+        color: red;
+    }
+</style>
+
+<h2>Result: @ViewBag.CorrectAnswerCount/@Model.randomEntities.Count</h2>
+
+@foreach (var item in Model.randomEntities)
+{
+    text = text.Substring(0, item.Offset) + (item.Text == Model.answers[i] ? $"<span class=\"right\">{Model.answers[i]}</span>" :
+    $"<span class=\"wrong\">{Model.answers[i]}</span> <span class=\"right\">{item.Text}</span>") + text.Substring(item.Offset + item.Length);
+    i++;
+}
+@Html.Raw(text)
