@@ -1,0 +1,47 @@
+﻿@using System.Text.RegularExpressions
+@using Azure
+@using Azure.AI.TextAnalytics
+@{
+    ViewData["Title"] = "Health information recognition";
+    List<HealthcareEntity> entities = ViewBag.entities;
+    string text = ViewBag.text;
+}
+
+
+
+<h1>Personally Identifiable Information recognition</h1>
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("inputText", "Enter Text:")
+        @Html.TextArea("inputText", new Dictionary<string, string> { { "class", "form-control" } })
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+}
+<hr />
+
+@if (entities!= null)
+{
+    <div>
+        <h2>Result</h2>
+        <table class="table">
+            <tr>
+                <th><b>Entity</b></th>
+                <th><b>Category</b></th>
+                <th><b>Subcategory</b></th>
+                <th><b>Confidence score</b></th>
+            </tr>
+            @foreach (var entity in entities)
+            {
+                <tr>
+                    <th>@entity.Text</th>
+                    <th>@entity.Category</th>
+                    <th>@(entity.SubCategory != null ? entity.SubCategory : "-")</th>
+                    <th>@entity.ConfidenceScore</th>
+                </tr>
+            }
+        </table>
+    </div>
+}

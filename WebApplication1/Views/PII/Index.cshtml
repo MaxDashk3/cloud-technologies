@@ -1,0 +1,92 @@
+﻿@using System.Text.RegularExpressions
+@using Azure.AI.TextAnalytics
+@{
+    ViewData["Title"] = "Personally Identifiable Information recognition";
+    PiiEntityCollection entities = ViewBag.entities;
+    string text = ViewBag.text;
+    string[] categories = ViewBag.categories;
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const checkboxes = document.querySelectorAll("#piiForm input[type='checkbox']");
+    const piiElements = document.querySelectorAll(".pii");
+
+    checkboxes.forEach(checkbox => {
+    checkbox.addEventListener("change", function () {
+    const category = checkbox.getAttribute("data-category");
+
+    piiElements.forEach(span => {
+    if (span.getAttribute("data-category") === category) {
+    if (checkbox.checked) {
+    span.innerText = "********";
+    } else {
+    span.innerText = span.getAttribute("data-text");
+    }
+    }
+    });
+    });
+    });
+    });
+</script>
+
+
+<h1>Personally Identifiable Information recognition</h1>
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("inputText", "Enter Text:")
+        @Html.TextArea("inputText", new Dictionary<string, string> { { "class", "form-control" } })
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
+}
+<hr />
+
+@if (entities!= null)
+{
+    <div>
+        <h2>Result</h2>
+        <table class="table">
+            <tr>
+                <th><b>Entity</b></th>
+                <th><b>Category</b></th>
+                <th><b>Subcategory</b></th>
+                <th><b>Confidence score</b></th>
+            </tr>
+            @foreach (var entity in entities)
+            {
+                <tr>
+                    <th>@entity.Text</th>
+                    <th>@entity.Category</th>
+                    <th>@(entity.SubCategory != null ? entity.SubCategory : "-")</th>
+                    <th>@entity.ConfidenceScore</th>
+                </tr>
+            }
+        </table>
+    </div>
+
+    foreach (var entity in entities.Reverse())
+    {
+        text = text.Substring(0, entity.Offset)
+        + $"<span class=\"pii\" data-category=\"{entity.Category}\" data-text=\"{entity.Text}\">{entity.Text}</span>" 
+        + text.Substring(entity.Offset + entity.Length);
+    }
+
+
+    <h3>Censor PII</h3>
+    <p>
+        @Html.Raw(text)
+    </p>
+
+    <hr />
+    <p>Choose information to censor:</p>
+
+    <form id="piiForm">
+        @foreach(var category in categories)
+        {
+            <label><input type="checkbox" data-category="@category">@category</label><br />
+        }
+    </form>
+
+}
