@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Test Creator";
+}
+
+<style>
+    .field-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .field-container input {
+        width: 50%; 
+        min-width: 300px;
+    }
+
+</style>
+
+<script>
+    function addField() {
+        var container = document.getElementById("fieldsContainer");
+
+        var fieldContainer = document.createElement("div");
+        fieldContainer.classList.add("field-container");
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.name = "inputFields[]";
+        input.placeholder = "Enter text";
+        input.classList.add("form-control");
+
+        var removeButton = document.createElement("button");
+        removeButton.innerHTML = '<i class="bi bi-trash"></i>';
+        removeButton.classList.add("btn", "btn-danger");
+        removeButton.onclick = function() {
+            container.removeChild(fieldContainer);
+        };
+
+        fieldContainer.appendChild(input);
+        fieldContainer.appendChild(removeButton);
+        container.appendChild(fieldContainer);
+    }
+</script>
+
+<body>
+    <h2>Create a test by adding fields and choosing a target language</h2>
+
+    <form asp-action="Test" method="post">
+        <div id="fieldsContainer"></div>
+        <button onclick="addField()" class="btn btn-secondary" type="button">Add Field</button>
+        <hr />
+        <label for="language">Select target Language:</label>
+        <select id="language" name="targetLanguage">
+            @foreach (var language in ViewBag.languages)
+            {
+                <option value="@language.Key">
+                    @language.Value
+                </option>
+            }
+        </select>
+        <br /><br />
+        <input type="submit" class="btn btn-primary d-block" value="Create Test">
+    </form>
+</body>

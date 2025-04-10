@@ -1,0 +1,32 @@
+﻿@model List<WebApplication1.Models.TranslatorTestItem>
+@{
+	ViewData["Title"] = "Test";
+}
+
+<h1>Test</h1>
+<form asp-action="Result" method="post">
+	@{int i = 0;}
+	@foreach (var item in Model)
+	{
+		<div>
+			<h4>@(i+1). @item.Title</h4><br />
+			@if (item.AnswerOptions != null)
+			{
+				<div class="d-inline-flex gap-3">
+				@foreach (var option in item.AnswerOptions)
+				{
+					<input type="radio" id="@i @option" name="userAnswers[@i]" value="@option" class="btn-check"/>
+					<label for="@i @option" class="btn btn-outline-primary">@option</label><br />				
+				}
+				</div>
+			}
+			else
+			{
+				<input type="text" name="userAnswers[@i]"/><br />
+			}
+		</div>
+		<hr />
+		i++;
+	}
+	<input type="submit" value="Submit" class="btn btn-success"/>
+</form>

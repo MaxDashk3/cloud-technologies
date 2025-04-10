@@ -1,0 +1,57 @@
+﻿@model List<WebApplication1.Models.TranslatorTestItem>
+@{
+	ViewData["Title"] = "Result";
+}
+
+<h1>Result: @ViewBag.grade/@ViewBag.totalQuestions</h1>
+
+@{int i = 0;}
+@foreach (var item in Model)
+{
+	bool isCorrect = ViewBag.userAnswers[i] == ViewBag.correctAnswers[i];
+	<div>
+		<h4>@(i + 1). @item.Title <i 
+			class="bi @(isCorrect? "bi-check text-success":"bi-x text-danger")"></i>
+		</h4>
+		<br />
+		@if (item.AnswerOptions != null)
+		{
+			<div class="d-inline-flex gap-3">
+				@foreach (var option in item.AnswerOptions)
+				{
+					string cls = "";
+					if (ViewBag.userAnswers[i] == option)
+					{
+						cls = ViewBag.correctAnswers[i] == option ? "btn btn-success" : "btn btn-danger";
+					}
+					else if (ViewBag.correctAnswers[i] == option)
+					{
+						cls = "btn btn-success";
+					}
+					else
+					{
+						cls = "btn btn-outline-primary";
+					}
+					<p disabled
+						class="@cls"
+					>@option</p>
+
+					<br />
+				}
+			</div>
+		}
+		else
+		{
+			<input type="text" value="@ViewBag.userAnswers[i]" disabled 
+			class="@(isCorrect ?"text-success": "text-danger") form-text"/>
+			if (!isCorrect)
+			{
+				<p class="text-success">Correct answer: @ViewBag.correctAnswers[i]</p>
+			}
+			<br />
+
+		}
+	</div>
+	<hr />
+	i++;
+}
