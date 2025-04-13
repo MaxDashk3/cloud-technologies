@@ -1,0 +1,15 @@
+﻿@using Azure.AI.Vision.ImageAnalysis
+@{
+	ViewData["Title"] = "OCR";
+}
+
+<h1>OCR results</h1>
+<div class="row">
+	<div class="col-6">
+		<img style="width: 100%; height: auto;" src="@Url.Action("DisplayImage", "ImageAnalysis")" alt="Uploaded Image" />
+	</div>
+	<div class="col-6">
+		<h4>Text:</h4>
+		<pre class="font-monospace">@ViewBag.text</pre>
+	</div>
+</div>

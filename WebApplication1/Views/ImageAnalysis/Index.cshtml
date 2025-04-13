@@ -1,0 +1,20 @@
+﻿@{
+	ViewData["Title"] = "Image Analysis";
+}
+
+@using (Html.BeginForm("Upload", "ImageAnalysis", FormMethod.Post,
+                           new { enctype = "multipart/form-data" }))
+{
+    <label for="img">Upload Image:</label>
+    <input type="file" name="img" id="img" style="width: 100%;" />
+    <br /><br />
+    <label for="action">Choose action:</label>
+	<select name="action" id="action">
+		<option value="OCR">OCR</option>
+        <option value="ImageAnalysis">Image analysis</option>
+        <option value="Face">Face data analysis</option>
+        <option value="PIICensor">Censor personal data</option>
+	</select>
+    <br />
+    <input type="submit" value="Upload" class="btn btn-primary" />
+}

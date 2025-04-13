@@ -1,0 +1,47 @@
+﻿@using Azure.AI.Vision.Face
+@{
+	ViewData["Title"] = "Face data";
+}
+@model IReadOnlyList<FaceDetectionResult>
+
+<h1>Face data</h1>
+<img style="max-width: 500px; width: 100%" src="@Url.Action("DisplayImage", "ImageAnalysis")" alt="Uploaded Image" />
+<h4>Results:</h4>
+<table class="table">
+	<thead>
+		<tr>
+			<td>Accesories</td>
+			<td>Exposure</td>
+			<td>Glasses</td>
+			<td>Pose</td>
+			<td>Bounding Box</td>
+		</tr>
+	</thead>
+	@{int i = 0;}
+	@foreach (var face in Model)
+	{
+		i++;
+		<tr>
+			<td colspan="5">Face @i</td>
+		</tr>
+		<tr>
+			<td>@foreach (var accesory in face.FaceAttributes.Accessories)
+				{
+					<p>@accesory.Type : @accesory.Confidence</p>
+				}
+			</td>
+			<td>@face.FaceAttributes.Exposure.Value</td>
+			<td>@(face.FaceAttributes.Glasses.HasValue 
+				? @face.FaceAttributes.Glasses.Value
+				: "-" )</td>
+			<td><p>Roll: @face.FaceAttributes.HeadPose.Roll</p>
+				<p>Yaw: @face.FaceAttributes.HeadPose.Yaw</p>
+				<p>Pitch: @face.FaceAttributes.HeadPose.Pitch</p>
+			</td>
+			<td>
+				<p>Coordinates: @face.FaceRectangle.Left, @face.FaceRectangle.Top</p>
+				<p>Dimensions: @face.FaceRectangle.Width, @face.FaceRectangle.Height </p>
+			</td>
+		</tr>
+	}
+</table>

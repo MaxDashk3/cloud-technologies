@@ -1,0 +1,46 @@
+﻿@using Azure.AI.Vision.ImageAnalysis
+@model ImageAnalysisResult
+@{
+	ViewData["Title"] = "Image Analysis";
+}
+
+<h1>Image Analysis results</h1>
+
+<div class="row">
+	<div class="col-6">
+		<img style="width: 100%; height: auto;"  src="@Url.Action("DisplayImage", "ImageAnalysis")" alt="Uploaded Image" />
+	</div>
+		<div class="col-6">
+		<h4>Caption:</h4>
+		<p>@Model.Caption.Text</p>
+		<h4>Tags:</h4>
+		<ul>
+			@foreach (var tag in Model.Tags.Values)
+			{
+				<li>@tag.Name</li>
+			}
+		</ul>
+
+		<h4>Objects:</h4>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Object</th>
+					<th>Confidence</th>
+					<th>Bounding Box</th>
+				</tr>
+			</thead>
+				@foreach (var obj in Model.Objects.Values)
+			{
+				<tr>
+					<td>@obj.Tags[0].Name</td>
+					<td>@obj.Tags[0].Confidence</td>
+					<td>
+						@obj.BoundingBox.X, @obj.BoundingBox.Y, @obj.BoundingBox.Width, @obj.BoundingBox.Height
+					</td>
+				</tr>
+			}
+
+		</table>
+	</div>
+</div>
